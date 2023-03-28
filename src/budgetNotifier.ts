@@ -5,7 +5,6 @@ import { NotificationType } from "./notificationType";
 import { TimeUnit } from "./timeUnit";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { Tags, Duration } from "aws-cdk-lib";
-import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { PolicyStatement, Effect, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { LambdaSubscription } from "aws-cdk-lib/aws-sns-subscriptions";
 import * as path from "path";
@@ -13,7 +12,7 @@ import {
   OrganizationsClient,
   DescribeAccountCommand,
 } from "@aws-sdk/client-organizations";
-import { Runtime } from "aws-cdk-lib/aws-lambda";
+import { Runtime, Function, Code } from "aws-cdk-lib/aws-lambda";
 
 export class BudgetNotifier extends Construct {
   constructor(scope: Construct, id: string, props: BudgetNotifierProps) {
@@ -78,12 +77,12 @@ export class BudgetNotifier extends Construct {
     }
   }
   private createLambda(accountId: string): any {
-    return new NodejsFunction(this, "my-lambda" + accountId, {
+    return new Function(this, "my-lambda" + accountId, {
       memorySize: 1024,
       timeout: Duration.seconds(5),
       runtime: Runtime.NODEJS_16_X,
-      handler: "main",
-      entry: path.join(__dirname, `/../lambda/index.ts`),
+      handler: "index.handler",
+      code: Code.fromAsset(path.join(__dirname, "../lambda")),
     });
   }
 
