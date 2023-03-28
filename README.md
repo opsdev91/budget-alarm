@@ -30,7 +30,7 @@ const statement = new PolicyStatement({
   effect: Effect.ALLOW,
   principals: [new ServicePrincipal("budgets.amazonaws.com")],
   actions: ["SNS:Publish"],
-  sid: "Allow budget to publish to SNS"
+  sid: "Allow budget to publish to SNS",
 });
 topic.addToResourcePolicy(statement);
 
@@ -47,7 +47,6 @@ new BudgetNotifier(stack, "notifier", {
   threshold: 85,
   notificationType: NotificationType.FORECASTED,
 });
-
 ```
 
 ### Notification via e-Mail
@@ -59,14 +58,14 @@ recipients.
 const app = new cdk.App();
 const stack = new Stack(app, "BudgetNotifierStack");
 
-new BudgetNotifier(stack, 'notifier', {
-  recipients: ['john.doe@foo.bar'],
+new BudgetNotifier(stack, "notifier", {
+  recipients: ["john.doe@foo.bar"],
   // Filter on the availability zone `eu-central-1`
-  availabilityZones: ['eu-central-1'],
-  costCenter: 'MyCostCenter',
+  availabilityZones: ["eu-central-1"],
+  costCenter: "MyCostCenter",
   // Limit and unit defining the budget limit
   limit: 10,
-  unit: 'USD',
+  unit: "USD",
   // When breaching the threshold of 85% of the 10 USD notifications will be send out.
   threshold: 85,
   notificationType: NotificationType.FORECASTED,
@@ -74,21 +73,6 @@ new BudgetNotifier(stack, 'notifier', {
 ```
 
 ## Contributions
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/dedominicisfa"><img src="https://avatars.githubusercontent.com/u/23100791?v=4" width="100px;" alt=""/><br /><sub><b>dedominicisfa</b></sub></a></td>
-    <td align="center"><a href="http://p6m7g8.github.io"><img src="https://avatars.githubusercontent.com/u/34295?v=4" width="100px;" alt=""/><br /><sub><b>Philip M. Gollucci</b></sub></a></td>
-  </tr>
-</table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## Links
 
