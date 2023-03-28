@@ -1,0 +1,6 @@
+{
+  "app": "npx ts-node examples/notify_on_forcasted_costs/budgetNotifierStack.ts",
+  "context": {
+    "aws-cdk:enableDiffNoFail": "true"
+  }
+}
