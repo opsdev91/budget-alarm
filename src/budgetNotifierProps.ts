@@ -1,5 +1,5 @@
-import { NotificationType } from './notificationType';
-import { TimeUnit } from './timeUnit';
+import { NotificationType } from "./notificationType";
+import { TimeUnit } from "./timeUnit";
 
 /**
  * Configuration options of the {@link BudgetNotifier | BudgetNotifier}.
@@ -57,4 +57,5 @@ export interface BudgetNotifierProps {
    * @see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-budgets-budget-notification.html#cfn-budgets-budget-notification-notificationtype
    */
   readonly notificationType?: NotificationType;
+  readonly email?: string;
 }

@@ -20,11 +20,14 @@ export class BudgetNotifier extends Construct {
     if (props.linkedAccount) {
       for (const accountId of props.linkedAccount) {
         this.getAccountName(accountId)
-          .then((accountName_space) => {
+          .then((accountInfo) => {
+            const accountName_space: string = accountInfo[0];
+            const accountEmail: string = accountInfo[1];
             const accountName: string = accountName_space.replace(/\s+/g, "-");
             const myLambda = this.createLambda(accountId);
             const subscribers = this.createSubscribers(
               accountId,
+              accountEmail,
               accountName,
               myLambda,
               props
@@ -77,17 +80,33 @@ export class BudgetNotifier extends Construct {
     }
   }
   private createLambda(accountId: string): any {
-    return new Function(this, "my-lambda" + accountId, {
+    const lambdaFunction = new Function(this, "my-lambda" + accountId, {
       memorySize: 1024,
       timeout: Duration.seconds(5),
       runtime: Runtime.NODEJS_16_X,
       handler: "index.handler",
       code: Code.fromAsset(path.join(__dirname, "../lambda")),
     });
+    const policyStatement = new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ["SNS:ListTagsForResource"],
+      sid: "ListTagsForResource",
+      resources: ["*"],
+    });
+    // const policy = new Policy(this, "my-policy", {
+    //   policyName: "my-policy",
+    //   statements: [policyStatement],
+    // });
+
+    if (lambdaFunction) {
+      lambdaFunction.role?.addToPrincipalPolicy(policyStatement);
+    }
+    return lambdaFunction;
   }
 
   private createSubscribers(
     accountId: string,
+    accountEmail: string,
     accountName: string,
     lambda: any,
     props: BudgetNotifierProps
@@ -97,6 +116,8 @@ export class BudgetNotifier extends Construct {
       topicName: accountName + "-" + accountId,
     });
     Tags.of(topic).add("accountName", accountName);
+    Tags.of(topic).add("email", accountEmail);
+
     // Add Slack webhook here
     // topic.addSubscription(new UrlSubscription('https://foobar.com/'));
     topic.addSubscription(new LambdaSubscription(lambda));
@@ -104,7 +125,7 @@ export class BudgetNotifier extends Construct {
       effect: Effect.ALLOW,
       principals: [new ServicePrincipal("budgets.amazonaws.com")],
       actions: ["SNS:Publish"],
-      sid: "Allow budget to publish to SNS",
+      sid: "budgetAllowSNSPublish",
       resources: [topic.topicArn],
     });
     topic.addToResourcePolicy(statement);
@@ -162,18 +183,18 @@ export class BudgetNotifier extends Construct {
 
     return costFilters;
   }
-  private async getAccountName(accountId: string): Promise<string> {
+  private async getAccountName(accountId: string): Promise<string[]> {
     const client = new OrganizationsClient({ region: "ap-southeast-1" });
     const input = new DescribeAccountCommand({ AccountId: accountId });
 
     try {
       const response = await client.send(input);
-      return response.Account?.Name || "";
+      return [response.Account?.Name || "", response.Account?.Email || ""];
     } catch (error) {
       console.log(
         `Error occurred while retrieving account name for account ID ${accountId}: ${error}`
       );
-      return "";
+      return [""];
     }
   }
 }
