@@ -24,7 +24,7 @@ export class BudgetNotifier extends Construct {
             const accountName_space: string = accountInfo[0];
             const accountEmail: string = accountInfo[1];
             const accountName: string = accountName_space.replace(/\s+/g, "-");
-            const myLambda = this.createLambda(accountId);
+            const myLambda = this.createLambda(accountId, accountName);
             const subscribers = this.createSubscribers(
               accountId,
               accountEmail,
@@ -32,8 +32,11 @@ export class BudgetNotifier extends Construct {
               myLambda,
               props
             );
+            let costFilters: any;
             this.validateProperties(props);
-            const costFilters = this.createCostFilters(accountId, props);
+            if (accountId !== props.rootAccount) {
+              costFilters = this.createCostFilters(accountId, props);
+            }
             new CfnBudget(this, "myCnfBudget" + accountId, {
               budget: {
                 budgetType: "COST",
@@ -79,13 +82,18 @@ export class BudgetNotifier extends Construct {
       throw new Error("Thresholds less than or equal to 0 are not allowed.");
     }
   }
-  private createLambda(accountId: string): any {
+  private createLambda(accountId: string, accountName: string): any {
     const lambdaFunction = new Function(this, "my-lambda" + accountId, {
       memorySize: 1024,
       timeout: Duration.seconds(5),
       runtime: Runtime.NODEJS_16_X,
       handler: "index.handler",
       code: Code.fromAsset(path.join(__dirname, "../lambda")),
+      functionName: accountName + "-" + accountId,
+      environment: {
+        token: String(process.env.token),
+        channel: String(process.env.channel),
+      },
     });
     const policyStatement = new PolicyStatement({
       effect: Effect.ALLOW,
@@ -111,12 +119,19 @@ export class BudgetNotifier extends Construct {
     lambda: any,
     props: BudgetNotifierProps
   ) {
+    const thresholdCost: string = String(
+      (Number(props.threshold) * Number(props.limit)) / 100
+    );
     const subscribers = new Array<CfnBudget.SubscriberProperty>();
     const topic = new Topic(this, "topic" + accountId, {
       topicName: accountName + "-" + accountId,
     });
     Tags.of(topic).add("accountName", accountName);
     Tags.of(topic).add("email", accountEmail);
+    Tags.of(topic).add("accountID", accountId);
+    Tags.of(topic).add("thresholdCost", thresholdCost);
+    Tags.of(topic).add("threshold", String(props.threshold));
+    Tags.of(topic).add("limit", String(props.limit));
 
     // Add Slack webhook here
     // topic.addSubscription(new UrlSubscription('https://foobar.com/'));

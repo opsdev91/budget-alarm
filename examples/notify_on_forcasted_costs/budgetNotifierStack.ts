@@ -14,6 +14,7 @@ for (const account of accounts) {
     // Filter on the availability zone `eu-central-1`
     // availabilityZones: ['ap-southeast-1'],
     linkedAccount: [account.id],
+    rootAccount: "368886022624",
     // costCenter: 'MyCostCenter',
     // Limit and unit defining the budget limit
     limit: account.limit,

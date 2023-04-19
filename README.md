@@ -54,23 +54,7 @@ new BudgetNotifier(stack, "notifier", {
 As alternative to the notification via SNS you can specify a list of e-mail
 recipients.
 
-```typescript
-const app = new cdk.App();
-const stack = new Stack(app, "BudgetNotifierStack");
 
-new BudgetNotifier(stack, "notifier", {
-  recipients: ["john.doe@foo.bar"],
-  // Filter on the availability zone `eu-central-1`
-  availabilityZones: ["eu-central-1"],
-  costCenter: "MyCostCenter",
-  // Limit and unit defining the budget limit
-  limit: 10,
-  unit: "USD",
-  // When breaching the threshold of 85% of the 10 USD notifications will be send out.
-  threshold: 85,
-  notificationType: NotificationType.FORECASTED,
-});
-```
 
 ## Contributions
 

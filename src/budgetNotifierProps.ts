@@ -58,4 +58,5 @@ export interface BudgetNotifierProps {
    */
   readonly notificationType?: NotificationType;
   readonly email?: string;
+  readonly rootAccount?: string;
 }

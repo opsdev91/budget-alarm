@@ -1,0 +1,258 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.0.5"
+        }
+      },
+      "BudgetNotifierStack": {
+        "id": "BudgetNotifierStack",
+        "path": "BudgetNotifierStack",
+        "children": {
+          "notifier240365136232": {
+            "id": "notifier240365136232",
+            "path": "BudgetNotifierStack/notifier240365136232",
+            "children": {
+              "my-lambda240365136232": {
+                "id": "my-lambda240365136232",
+                "path": "BudgetNotifierStack/notifier240365136232/my-lambda240365136232",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "BudgetNotifierStack/notifier240365136232/my-lambda240365136232/ServiceRole",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "BudgetNotifierStack/notifier240365136232/my-lambda240365136232/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "lambda.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "managedPolicyArns": [
+                              {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                  ]
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.50.0"
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "BudgetNotifierStack/notifier240365136232/my-lambda240365136232/ServiceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "BudgetNotifierStack/notifier240365136232/my-lambda240365136232/ServiceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "SNS:ListTagsForResource",
+                                      "Effect": "Allow",
+                                      "Resource": "*",
+                                      "Sid": "ListTagsForResource"
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "notifier240365136232mylambda240365136232ServiceRoleDefaultPolicyF807F8EE",
+                                "roles": [
+                                  {
+                                    "Ref": "notifier240365136232mylambda240365136232ServiceRole9FF4BA9D"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                              "version": "2.50.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Policy",
+                          "version": "2.50.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.50.0"
+                    }
+                  },
+                  "Code": {
+                    "id": "Code",
+                    "path": "BudgetNotifierStack/notifier240365136232/my-lambda240365136232/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "BudgetNotifierStack/notifier240365136232/my-lambda240365136232/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.50.0"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "BudgetNotifierStack/notifier240365136232/my-lambda240365136232/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.50.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.50.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BudgetNotifierStack/notifier240365136232/my-lambda240365136232/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                      "aws:cdk:cloudformation:props": {
+                        "code": {
+                          "s3Bucket": {
+                            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                          },
+                          "s3Key": "fbe9eb0455edea88254d03309c4948ff1eb48e2d84b58b1b10f9f15c6e517d75.zip"
+                        },
+                        "role": {
+                          "Fn::GetAtt": [
+                            "notifier240365136232mylambda240365136232ServiceRole9FF4BA9D",
+                            "Arn"
+                          ]
+                        },
+                        "environment": {
+                          "variables": {
+                            "token": "undefined",
+                            "channel": "undefined"
+                          }
+                        },
+                        "functionName": "-240365136232",
+                        "handler": "index.handler",
+                        "memorySize": 1024,
+                        "runtime": "nodejs16.x",
+                        "timeout": 5
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                      "version": "2.50.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Function",
+                  "version": "2.50.0"
+                }
+              },
+              "topic240365136232": {
+                "id": "topic240365136232",
+                "path": "BudgetNotifierStack/notifier240365136232/topic240365136232",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BudgetNotifierStack/notifier240365136232/topic240365136232/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::SNS::Topic",
+                      "aws:cdk:cloudformation:props": {
+                        "tags": [
+                          {
+                            "key": "accountName",
+                            "value": ""
+                          }
+                        ],
+                        "topicName": "-240365136232"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_sns.CfnTopic",
+                      "version": "2.50.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sns.Topic",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.0.5"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "BudgetNotifierStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "BudgetNotifierStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.50.0"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "BudgetNotifierStack/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnCondition",
+                  "version": "2.50.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.0.5"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.50.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.50.0"
+    }
+  }
+}

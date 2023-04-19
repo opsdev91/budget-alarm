@@ -1,0 +1,32 @@
+{
+  "version": "21.0.0",
+  "files": {
+    "fbe9eb0455edea88254d03309c4948ff1eb48e2d84b58b1b10f9f15c6e517d75": {
+      "source": {
+        "path": "asset.fbe9eb0455edea88254d03309c4948ff1eb48e2d84b58b1b10f9f15c6e517d75",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "fbe9eb0455edea88254d03309c4948ff1eb48e2d84b58b1b10f9f15c6e517d75.zip",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    },
+    "e4e0835f8db94aefe6bb53be102fc8aa74ebebeefd60f07bfb493823f95fab06": {
+      "source": {
+        "path": "BudgetNotifierStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "e4e0835f8db94aefe6bb53be102fc8aa74ebebeefd60f07bfb493823f95fab06.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

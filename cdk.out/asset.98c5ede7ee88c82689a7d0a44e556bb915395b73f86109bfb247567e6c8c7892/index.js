@@ -21,8 +21,6 @@ exports.handler = function (event, context) {
           let accountID = '';
           let threshold = '';
           let forecastedAmount = '';
-          let thresholdCost = '';
-          let limit = '';
           for (const tag of tags) {
               if (tag.Key === 'email') {
                   accountEmail = tag.Value;
@@ -36,12 +34,6 @@ exports.handler = function (event, context) {
               if (tag.Key === 'threshold') {
                  threshold = tag.Value;
               }
-              if (tag.Key === 'thresholdCost') {
-                thresholdCost = tag.Value;
-             }
-             if (tag.Key === 'limit') {
-                limit = tag.Value;
-             }
           }
           console.log("From SNS:", event.Records[0].Sns.Message);
           const message = event.Records[0].Sns.Message;
@@ -89,7 +81,7 @@ exports.handler = function (event, context) {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": `:chart_with_upwards_trend: Your FORECASTED Cost budget has exceeded the limit for the current month. The current FORECASTED Cost is $${forecastedAmount}, slightly higher than the threshold limit  of ${threshold}% of $${limit}, i.e., $${thresholdCost} :worried:`
+                  "text": `:chart_with_upwards_trend: Your FORECASTED Cost budget has exceeded the limit for the current month. The current FORECASTED Cost is $${forecastedAmount}, slightly higher than the threshold limit of $${threshold} :worried:`
                 }
               },
               {
